@@ -28,20 +28,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
     if (mounted) {
       setState(() {});
     }
-    final NetworkResponse response =
-        await NetworkCaller().postRequest(Urls.registration, <String, dynamic>{
+
+    Map<String, dynamic> requestBody = {
       "email": _emailTEController.text.trim(),
       "firstName": _firstNameTEController.text.trim(),
       "lastName": _lastNameTEController.text.trim(),
       "mobile": _mobileTEController.text.trim(),
       "password": _passwordTEController.text,
       "photo": "",
-    });
+    };
+
+    final NetworkResponse response = await NetworkCaller().postRequest(
+      Urls.registration,
+      requestBody,
+    );
     _signUpInProgress = false;
     if (mounted) {
       setState(() {});
     }
     if (response.isSuccess) {
+      _emailTEController.clear();
+      _firstNameTEController.clear();
+      _lastNameTEController.clear();
+      _mobileTEController.clear();
+      _passwordTEController.clear();
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registration Success!')));
