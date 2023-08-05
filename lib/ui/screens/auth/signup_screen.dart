@@ -1,8 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:task_manager_with_rafat/data/models/network_response.dart';
+import 'package:task_manager_with_rafat/data/services/network_caller.dart';
+import 'package:task_manager_with_rafat/data/utils/urls.dart';
 import 'package:task_manager_with_rafat/ui/widgets/background_screen.dart';
 
-class SignUpScreen extends StatelessWidget {
+class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
+
+  @override
+  State<SignUpScreen> createState() => _SignUpScreenState();
+}
+
+class _SignUpScreenState extends State<SignUpScreen> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _emailTEController = TextEditingController();
+  final TextEditingController _firstNameTEController = TextEditingController();
+  final TextEditingController _lastNameTEController = TextEditingController();
+  final TextEditingController _mobileTEController = TextEditingController();
+  final TextEditingController _passwordTEController = TextEditingController();
+
+  bool _signUpInProgress = false;
+
+  Future<void> userSignUp() async {
+    _signUpInProgress = true;
+    if (mounted) {
+      setState(() {});
+    }
+    final NetworkResponse response =
+        await NetworkCaller().postRequest(Urls.registration, <String, dynamic>{
+      "email": _emailTEController.text.trim(),
+      "firstName": _firstNameTEController.text.trim(),
+      "lastName": _lastNameTEController.text.trim(),
+      "mobile": _mobileTEController.text.trim(),
+      "password": _passwordTEController.text,
+      "photo": "",
+    });
+    _signUpInProgress = false;
+    if (mounted) {
+      setState(() {});
+    }
+    if (response.isSuccess) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration Success!')));
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Registration failed')));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -12,88 +62,137 @@ class SignUpScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const SizedBox(
-                    height: 100,
-                  ),
-                  Text(
-                    'Join With Us',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  const SizedBox(
-                    height: 24,
-                  ),
-                  const TextField(
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: InputDecoration(
-                      hintText: 'Email',
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      height: 100,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  const TextField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      hintText: 'First Name',
+                    Text(
+                      'Join With Us',
+                      style: Theme.of(context).textTheme.titleLarge,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  const TextField(
-                    keyboardType: TextInputType.text,
-                    decoration: InputDecoration(
-                      hintText: 'Last Name',
+                    const SizedBox(
+                      height: 24,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  const TextField(
-                    keyboardType: TextInputType.phone,
-                    decoration: InputDecoration(
-                      hintText: 'Mobile',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  const TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 16,
-                  ),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {},
-                      child: const Icon(Icons.arrow_forward_ios),
-                    ),
-                  ),
-                  const SizedBox(
-                    height: 26,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text('have account?'),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: const Text('Sign in'),
+                    TextFormField(
+                      controller: _emailTEController,
+                      validator: (String? value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter your email';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: const InputDecoration(
+                        hintText: 'Email',
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    TextFormField(
+                      controller: _firstNameTEController,
+                      validator: (String? value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter your first name';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(
+                        hintText: 'First Name',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    TextFormField(
+                      controller: _lastNameTEController,
+                      validator: (String? value) {
+                        if (value?.isEmpty ?? true) {
+                          return 'Enter your last name';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.text,
+                      decoration: const InputDecoration(
+                        hintText: 'Last Name',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    TextFormField(
+                      controller: _mobileTEController,
+                      validator: (String? value) {
+                        if ((value?.isEmpty ?? true) || value!.length < 11) {
+                          return 'Enter valid mobile number';
+                        }
+                        return null;
+                      },
+                      keyboardType: TextInputType.phone,
+                      decoration: const InputDecoration(
+                        hintText: 'Mobile',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    TextFormField(
+                      controller: _passwordTEController,
+                      validator: (String? value) {
+                        if ((value?.isEmpty ?? true) || value!.length < 5) {
+                          return 'Password should be at least 6 character';
+                        }
+                        return null;
+                      },
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        hintText: 'Password',
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: Visibility(
+                        visible: _signUpInProgress == false,
+                        replacement: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (!_formKey.currentState!.validate()) {
+                              return;
+                            }
+                            userSignUp();
+                          },
+                          child: const Icon(Icons.arrow_forward_ios),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 26,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text('have account?'),
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: const Text('Sign in'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

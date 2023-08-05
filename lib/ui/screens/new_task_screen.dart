@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_with_rafat/ui/widgets/background_screen.dart';
+import 'package:task_manager_with_rafat/ui/screens/add_new_task_screen.dart';
 import 'package:task_manager_with_rafat/ui/widgets/summary_card.dart';
 import 'package:task_manager_with_rafat/ui/widgets/task_list_tile.dart';
 import 'package:task_manager_with_rafat/ui/widgets/user_profile_banner.dart';
@@ -10,6 +10,17 @@ class NewTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddNewTaskScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
       body: SafeArea(
         child: Column(
           children: [
