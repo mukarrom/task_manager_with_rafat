@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:task_manager_with_rafat/data/models/auth_utility.dart';
+import 'package:task_manager_with_rafat/ui/screens/auth/login_screen.dart';
 
-class UserProfileBanner extends StatelessWidget {
+class UserProfileBanner extends StatefulWidget {
   const UserProfileBanner({
     super.key,
   });
 
+  @override
+  State<UserProfileBanner> createState() => _UserProfileBannerState();
+}
+
+class _UserProfileBannerState extends State<UserProfileBanner> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
@@ -19,7 +25,7 @@ class UserProfileBanner extends StatelessWidget {
       ),
       title: Text(
         '${AuthUtility.userInfo.data?.firstName ?? ''} ${AuthUtility.userInfo.data?.lastName ?? ''}',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.bold,
           color: Colors.white,
@@ -27,10 +33,22 @@ class UserProfileBanner extends StatelessWidget {
       ),
       subtitle: Text(
         AuthUtility.userInfo.data?.email ?? '',
-        style: TextStyle(
+        style: const TextStyle(
           fontSize: 12,
           color: Colors.white,
         ),
+      ),
+      trailing: IconButton(
+        onPressed: () async {
+          await AuthUtility.clearUserInfo();
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => const LoginScreen()),
+                (route) => false);
+          }
+        },
+        icon: const Icon(Icons.logout, color: Colors.white),
       ),
       tileColor: Colors.green,
       focusColor: Colors.green,
