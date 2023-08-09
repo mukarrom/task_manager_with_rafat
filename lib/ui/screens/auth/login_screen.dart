@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_with_rafat/data/models/auth_utility.dart';
+import 'package:task_manager_with_rafat/data/models/login_model.dart';
 import 'package:task_manager_with_rafat/data/models/network_response.dart';
 import 'package:task_manager_with_rafat/data/services/network_caller.dart';
 import 'package:task_manager_with_rafat/data/utils/urls.dart';
@@ -36,6 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
       setState(() {});
     }
     if (response.isSuccess) {
+      LoginModel model = LoginModel.fromJson(response.body!);
+      await AuthUtility.saveUserInfo(model);
       if (mounted) {
         Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
           builder: (context) {
