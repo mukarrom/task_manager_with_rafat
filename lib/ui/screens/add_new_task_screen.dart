@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:task_manager_with_rafat/ui/widgets/user_profile_banner.dart';
+import 'package:task_manager_app/data/models/network_response.dart';
+import 'package:task_manager_app/data/services/network_caller.dart';
+import 'package:task_manager_app/data/utils/urls.dart';
+import 'package:task_manager_app/ui/widgets/user_profile_banner.dart';
 
 class AddNewTaskScreen extends StatefulWidget {
   const AddNewTaskScreen({super.key});
@@ -8,20 +13,43 @@ class AddNewTaskScreen extends StatefulWidget {
   State<AddNewTaskScreen> createState() => _AddNewTaskScreenState();
 }
 
-class _AddNewTaskScreenState extends State<AddNewTaskScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
+class _AddNewTaskScreenState extends State<AddNewTaskScreen> {
+  final TextEditingController titleTEController = TextEditingController();
+  final TextEditingController descriptionTEController = TextEditingController();
+  bool isLoading = false;
 
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(vsync: this);
-  }
+  Future<void> addNewTask() async {
+    isLoading = true;
+    if (mounted) {
+      setState(() {});
+    }
+    Map<String, dynamic> requestBody = {
+      "title": titleTEController.text.trim(),
+      "description": descriptionTEController.text.trim(),
+      "status": "New",
+    };
+    NetworkResponse response =
+        await NetworkCaller().postRequest(Urls.createTask, requestBody);
+    isLoading = false;
+    if (mounted) {
+      setState(() {});
+    }
+    // log(response.statusCode.toString());
+    // log(response.body.toString());
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+    if (response.isSuccess) {
+      titleTEController.clear();
+      descriptionTEController.clear();
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Task Added Successful')));
+      }
+    } else {
+      if (mounted) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(const SnackBar(content: Text('Task Added failed')));
+      }
+    }
   }
 
   @override
@@ -30,59 +58,57 @@ class _AddNewTaskScreenState extends State<AddNewTaskScreen>
       body: SafeArea(
         child: Column(
           children: [
-            const ListTile(
-              leading: UserProfileBanner(),
-              title: Text(
-                'Name',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              subtitle: Text(
-                'Email',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.white,
-                ),
-              ),
-              tileColor: Colors.green,
-              focusColor: Colors.green,
-            ),
+            const UserProfileBanner(),
             Padding(
-              padding: const EdgeInsets.only(top: 60, left: 16, right: 16),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24.0,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  const SizedBox(
+                    height: 68,
+                  ),
+                  Text(
                     'Add New Task',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    style: Theme.of(context).textTheme.titleLarge,
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 16,
                   ),
-                  const TextField(),
+                  TextFormField(
+                    controller: titleTEController,
+                    decoration: const InputDecoration(hintText: 'Subject'),
+                  ),
                   const SizedBox(
-                    height: 8,
+                    height: 12,
                   ),
-                  const TextField(
+                  TextFormField(
+                    controller: descriptionTEController,
                     maxLines: 8,
+                    decoration: const InputDecoration(hintText: 'Details'),
                   ),
                   const SizedBox(
-                    height: 20,
+                    height: 16,
                   ),
                   SizedBox(
-                      width: double.infinity,
+                    width: double.infinity,
+                    child: Visibility(
+                      visible: !isLoading,
+                      replacement: const Center(
+                        child: CircularProgressIndicator(),
+                      ),
                       child: ElevatedButton(
-                          onPressed: () {},
-                          child: const Icon(Icons.arrow_forward_ios)))
+                        onPressed: () {
+                          addNewTask();
+                        },
+                        child: const Text('Add'),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

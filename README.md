@@ -1,6 +1,6 @@
-# task_manager_with_rafat
+# task_manager_app
 
-A new Flutter task manager project. It is practice project with rafat vai from ostad batch 3 module 11
+A new Flutter project.
 
 ## Getting Started
 
@@ -14,3 +14,9 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+# New widgets to learn
+  bottomNavigationBar : BottomNavigationBar();
+    item: [] -> BottomNavigationItem()
+    selectedItem, unselectedItem
+

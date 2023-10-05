@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_with_rafat/app.dart';
+import 'package:task_manager_app/app.dart';
 
-void main() {
+void main(){
   runApp(const TaskManagerApp());
 }
+

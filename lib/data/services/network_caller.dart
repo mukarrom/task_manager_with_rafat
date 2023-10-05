@@ -1,21 +1,28 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'package:http/http.dart';
-import 'package:task_manager_with_rafat/data/models/network_response.dart';
 
-/// NetworkCaller is a class it will handle all kind of api calling methods
-/// GET: getRequest it will return NetworkResponse type data, this type is created in the data/models folder.
-/// to handle error try catch method added.
+import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:task_manager_app/app.dart';
+import 'package:task_manager_app/data/models/auth_utility.dart';
+import 'package:task_manager_app/data/models/network_response.dart';
+import 'package:task_manager_app/ui/screens/auth/login_screen.dart';
+
 class NetworkCaller {
+  // --------- get request
   Future<NetworkResponse> getRequest(String url) async {
     try {
-      Response response = await get(Uri.parse(url));
+      Response response = await get(Uri.parse(url), headers: {
+        'token': AuthUtility.userInfo.token.toString(),
+      });
       if (response.statusCode == 200) {
         return NetworkResponse(
           true,
           response.statusCode,
           jsonDecode(response.body),
         );
+      } else if (response.statusCode == 401) {
+        goToLogin();
       } else {
         return NetworkResponse(false, response.statusCode, null);
       }
@@ -25,23 +32,28 @@ class NetworkCaller {
     return NetworkResponse(false, -1, null);
   }
 
-  // post request
+  // ------------ Post Request
   Future<NetworkResponse> postRequest(
-      String url, Map<String, dynamic> body) async {
+      String url, Map<String, dynamic> body, {bool isLogin = false}) async {
     try {
       Response response = await post(
         Uri.parse(url),
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          'token': AuthUtility.userInfo.token.toString(),
+        },
         body: jsonEncode(body),
       );
-      log(response.statusCode.toString());
-      log(response.body.toString());
       if (response.statusCode == 200) {
         return NetworkResponse(
           true,
           response.statusCode,
           jsonDecode(response.body),
         );
+      } else if (response.statusCode == 401) {
+        if (isLogin) {
+          goToLogin();
+        }
       } else {
         return NetworkResponse(false, response.statusCode, null);
       }
@@ -49,5 +61,13 @@ class NetworkCaller {
       log(e.toString());
     }
     return NetworkResponse(false, -1, null);
+  }
+
+  Future<void> goToLogin() async {
+    await AuthUtility.clearUserInfo();
+    Navigator.pushAndRemoveUntil(
+        TaskManagerApp.globalKey.currentContext!,
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+        (route) => false);
   }
 }

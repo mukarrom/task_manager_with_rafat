@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/ui/widgets/user_profile_banner.dart';
 
 class CompletedTaskScreen extends StatelessWidget {
   const CompletedTaskScreen({super.key});
@@ -6,9 +7,32 @@ class CompletedTaskScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Completed Task Screen'),
+      body: SafeArea(
+        child: Column(
+          children: [
+            const UserProfileBanner(),
+            //----- list view -------
+            Expanded(
+              child: ListView.separated(
+                itemCount: 20,
+                itemBuilder: (context, index) {
+                  return const Center(
+                    child: Text('hello'),
+                  );
+                  // return const TaskListTile(
+                  //   badge: 'Completed',
+                  // );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const Divider(
+                    height: 4,
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
       ),
-    );;
+    );
   }
 }

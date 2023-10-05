@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:task_manager_with_rafat/ui/utils/assets_utils.dart';
+import 'package:task_manager_app/ui/utils/assets_utils.dart';
 
-class BackgroundScreen extends StatelessWidget {
-  const BackgroundScreen({super.key, required this.child});
+class ScreenBackground extends StatelessWidget {
 
   final Widget child;
+  const ScreenBackground({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,7 @@ class BackgroundScreen extends StatelessWidget {
           width: double.infinity,
           height: double.infinity,
           child: SvgPicture.asset(
-            AssetsUtils.background,
+            AssetsUtils.backgroundSVG,
             fit: BoxFit.cover,
           ),
         ),

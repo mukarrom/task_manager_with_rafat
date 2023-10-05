@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_with_rafat/data/models/auth_utility.dart';
-import 'package:task_manager_with_rafat/ui/screens/auth/login_screen.dart';
+import 'package:task_manager_app/data/models/auth_utility.dart';
+import 'package:task_manager_app/ui/screens/auth/login_screen.dart';
 
 class UserProfileBanner extends StatefulWidget {
   const UserProfileBanner({
@@ -15,65 +15,47 @@ class _UserProfileBannerState extends State<UserProfileBanner> {
   @override
   Widget build(BuildContext context) {
     return ListTile(
+      contentPadding: const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+      tileColor: Colors.green,
       leading: CircleAvatar(
-        backgroundImage: NetworkImage(
-          AuthUtility.userInfo.data?.photo ?? '',
-        ),
+        radius: 20,
+        backgroundImage: NetworkImage(AuthUtility.userInfo.data?.photo ?? ""),
         onBackgroundImageError: (_, __) {
-          const Icon(Icons.image);
+          const Icon(Icons.people);
         },
       ),
       title: Text(
-        '${AuthUtility.userInfo.data?.firstName ?? ''} ${AuthUtility.userInfo.data?.lastName ?? ''}',
+        "${AuthUtility.userInfo.data?.firstName ?? 'Name'} ${AuthUtility.userInfo.data?.lastName ?? 'not found'}",
         style: const TextStyle(
           fontSize: 14,
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w600,
           color: Colors.white,
         ),
       ),
       subtitle: Text(
-        AuthUtility.userInfo.data?.email ?? '',
+        AuthUtility.userInfo.data?.email ?? 'email not found',
         style: const TextStyle(
-          fontSize: 12,
           color: Colors.white,
         ),
       ),
+      //---- logout button
       trailing: IconButton(
         onPressed: () async {
           await AuthUtility.clearUserInfo();
           if (mounted) {
-            Navigator.pushAndRemoveUntil(
-                context,
-                MaterialPageRoute(builder: (context) => const LoginScreen()),
-                (route) => false);
+            setState(() {
+              Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginScreen()),
+                  (route) => false);
+            });
           }
         },
-        icon: const Icon(Icons.logout, color: Colors.white),
+        icon: const Icon(
+          Icons.logout,
+          color: Colors.white,
+        ),
       ),
-      tileColor: Colors.green,
-      focusColor: Colors.green,
     );
   }
 }
-
-//
-// ListTile(
-// leading: UserProfileBanner(),
-// title: Text(
-// 'Name',
-// style: TextStyle(
-// fontSize: 14,
-// fontWeight: FontWeight.bold,
-// color: Colors.white,
-// ),
-// ),
-// subtitle: Text(
-// 'Email',
-// style: TextStyle(
-// fontSize: 12,
-// color: Colors.white,
-// ),
-// ),
-// tileColor: Colors.green,
-// focusColor: Colors.green,
-// )

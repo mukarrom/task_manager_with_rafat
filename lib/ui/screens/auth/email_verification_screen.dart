@@ -1,41 +1,50 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_with_rafat/ui/screens/auth/otp_verification_screen.dart';
-import 'package:task_manager_with_rafat/ui/widgets/background_screen.dart';
+import 'package:task_manager_app/ui/screens/auth/otp_verification_screen.dart';
+import 'package:task_manager_app/ui/widgets/screen_background.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
   const EmailVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.sizeOf(context);
     return Scaffold(
-      body: BackgroundScreen(
-        child: SafeArea(
+      body: SafeArea(
+        child: ScreenBackground(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.all(24),
+            child: SizedBox(
+              height: size.height,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 80,
-                  ),
                   Text(
-                    'Your Email Verification',
+                    'Your Email Address',
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
+                  const SizedBox(
+                    height: 12,
+                  ),
                   Text(
-                    'A 6 digits verification pin will send to your email address',
+                    "A 6 digits verification pin will send to your email address",
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
+                          color: Colors.grey.shade700,
+                          fontSize: 16,
                         ),
                   ),
                   const SizedBox(
-                    height: 28,
+                    height: 24,
                   ),
-                  const TextField(
-                    decoration: InputDecoration(
-                      hintText: 'Email',
+                  const Material(
+                    elevation: 1,
+                    child: TextField(
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: InputDecoration(hintText: 'Email'),
                     ),
+                  ),
+                  const SizedBox(
+                    height: 12,
                   ),
                   const SizedBox(
                     height: 16,
@@ -55,30 +64,27 @@ class EmailVerificationScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(
-                    height: 32,
+                    height: 28,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Have an account?',
+                        'have an account?',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                       TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: const Text(
-                          'Log in',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child: const Text('Sign in'),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

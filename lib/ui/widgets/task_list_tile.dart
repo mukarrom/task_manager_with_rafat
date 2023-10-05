@@ -1,43 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:task_manager_app/data/models/task_list_model.dart';
 
 class TaskListTile extends StatelessWidget {
   const TaskListTile({
     super.key,
+    required this.data,
+    required this.onDeleteTap,
+    required this.onEditTap,
   });
+
+  final VoidCallback onDeleteTap;
+  final VoidCallback onEditTap;
+
+  final TaskData data;
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      title: const Text('Title is here'),
+      title: Text(data.title ?? 'Unknown'),
       subtitle: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Subtitle is here'),
-          const Text('date is here'),
+          Text(data.description ?? ''),
+          Text(data.createdDate ?? ''),
           Row(
             children: [
-              const Chip(
-                label: Text('New'),
-                labelPadding: EdgeInsets.symmetric(horizontal: 40),
+              Chip(
+                label: Text(
+                  data.status ?? 'new',
+                  style: const TextStyle(color: Colors.white),
+                ),
                 backgroundColor: Colors.blue,
               ),
               const Spacer(),
               IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.edit_note,
-                  color: Colors.green,
+                onPressed: onDeleteTap,
+                icon: Icon(
+                  Icons.delete_forever_outlined,
+                  color: Colors.red.shade300,
                 ),
               ),
               IconButton(
-                onPressed: () {},
+                onPressed: onEditTap,
                 icon: const Icon(
-                  Icons.delete_forever_outlined,
-                  color: Colors.red,
+                  Icons.edit,
+                  color: Colors.green,
                 ),
-              )
+              ),
             ],
-          ),
+          )
         ],
       ),
     );

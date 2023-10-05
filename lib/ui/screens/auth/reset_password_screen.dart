@@ -1,52 +1,99 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_with_rafat/ui/screens/auth/login_screen.dart';
-import 'package:task_manager_with_rafat/ui/screens/auth/otp_verification_screen.dart';
-import 'package:task_manager_with_rafat/ui/widgets/background_screen.dart';
+import 'package:task_manager_app/ui/screens/auth/login_screen.dart';
+import 'package:task_manager_app/ui/widgets/screen_background.dart';
 
-class ResetPasswordScreen extends StatelessWidget {
+class ResetPasswordScreen extends StatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
+  State<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+}
+
+class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
+  bool _passwordVisible = false;
+
+  @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.sizeOf(context);
     return Scaffold(
-      body: BackgroundScreen(
-        child: SafeArea(
+      body: SafeArea(
+        child: ScreenBackground(
           child: SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(32),
+            padding: const EdgeInsets.all(24),
+            child: SizedBox(
+              height: size.height,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    height: 80,
-                  ),
                   Text(
                     'Set Password',
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                  Text(
-                    'Minimum length is 8 character and must contain number, letter and symbol',
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey,
-                        ),
-                  ),
-                  const SizedBox(
-                    height: 28,
-                  ),
-                  const TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Password',
-                    ),
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .titleLarge,
                   ),
                   const SizedBox(
                     height: 12,
                   ),
-                  const TextField(
-                    obscureText: true,
-                    decoration: InputDecoration(
-                      hintText: 'Confirm password',
+                  Text(
+                    "Minimum length password 8 character with Latter and number combination",
+                    style: Theme
+                        .of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(
+                      color: Colors.grey.shade700,
+                      fontSize: 16,
                     ),
+                  ),
+                  const SizedBox(
+                    height: 24,
+                  ),
+                  // ------------ Password field ------------
+                  Material(
+                    elevation: 1,
+                    child: TextField(
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: !_passwordVisible,
+                      decoration: InputDecoration(
+                        hintText: 'Password',
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _passwordVisible = !_passwordVisible;
+                            setState(() {});
+                          },
+                          icon: !_passwordVisible
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Material(
+                    elevation: 1,
+                    child: TextField(
+                      keyboardType: TextInputType.visiblePassword,
+                      obscureText: !_passwordVisible,
+                      decoration: InputDecoration(
+                        hintText: 'Confirm Password',
+                        suffixIcon: IconButton(
+                          onPressed: () {
+                            _passwordVisible = !_passwordVisible;
+                            setState(() {});
+                          },
+                          icon: !_passwordVisible
+                              ? const Icon(Icons.visibility)
+                              : const Icon(Icons.visibility_off),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  ///--------- end password field----------
+                  const SizedBox(
+                    height: 12,
                   ),
                   const SizedBox(
                     height: 16,
@@ -55,46 +102,40 @@ class ResetPasswordScreen extends StatelessWidget {
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const OtpVerificationScreen(),
-                          ),
-                        );
+                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(
+                          builder: (context) => const LoginScreen(),), (
+                            route) => false);
                       },
                       child: const Text('Confirm'),
                     ),
                   ),
                   const SizedBox(
-                    height: 32,
+                    height: 28,
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const Text(
-                        'Have an account?',
+                        'have an account?',
                         style: TextStyle(
-                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.black,
                         ),
                       ),
                       TextButton(
                         onPressed: () {
-                          Navigator.pushAndRemoveUntil(context,
+                          Navigator.pushAndRemoveUntil(
+                              context,
                               MaterialPageRoute(
-                            builder: (context) {
-                              return const LoginScreen();
-                            },
-                          ), (route) => false);
+                                builder: (context) => const LoginScreen(),
+                              ),
+                                  (route) => false);
                         },
-                        child: const Text(
-                          'Sign in',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
+                        child: const Text('Sign in'),
                       ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),

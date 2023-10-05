@@ -1,52 +1,63 @@
 import 'package:flutter/material.dart';
-import 'package:task_manager_with_rafat/ui/screens/cancelled_task_screen.dart';
-import 'package:task_manager_with_rafat/ui/screens/completed_task_screen.dart';
-import 'package:task_manager_with_rafat/ui/screens/in_progress_task_screen.dart';
-import 'package:task_manager_with_rafat/ui/screens/new_task_screen.dart';
+import 'package:task_manager_app/ui/screens/add_new_task_screen.dart';
+import 'package:task_manager_app/ui/screens/cancelled_task_screen.dart';
+import 'package:task_manager_app/ui/screens/completed_task_screen.dart';
+import 'package:task_manager_app/ui/screens/inprogress_task_screen.dart';
+import 'package:task_manager_app/ui/screens/new_task_screen.dart';
 
 class BottomNavBaseScreen extends StatefulWidget {
-  BottomNavBaseScreen({super.key});
+  const BottomNavBaseScreen({super.key});
 
   @override
   State<BottomNavBaseScreen> createState() => _BottomNavBaseScreenState();
 }
 
 class _BottomNavBaseScreenState extends State<BottomNavBaseScreen> {
-  int _currentScreenIndex = 0;
-
-  final List<Widget> _screens = const [
+  final List _screens = const [
     NewTaskScreen(),
-    CompletedTaskScreen(),
-    CancelledTaskScreen(),
     InProgressTaskScreen(),
+    CancelledTaskScreen(),
+    CompletedTaskScreen(),
   ];
+  int _selectedScreenIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _screens[_currentScreenIndex],
+      body: _screens[_selectedScreenIndex],
       bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedScreenIndex,
         unselectedItemColor: Colors.grey,
         selectedItemColor: Colors.green,
-        unselectedLabelStyle: const TextStyle(
-          color: Colors.grey,
-        ),
+        showSelectedLabels: true,
         showUnselectedLabels: true,
-        currentIndex: _currentScreenIndex,
         onTap: (index) {
-          _currentScreenIndex = index;
-          setState(() {});
+          _selectedScreenIndex = index;
+          if (mounted) {
+            setState(() {});
+          }
         },
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(Icons.add_task_outlined), label: 'New Task'),
+              icon: Icon(Icons.new_releases_outlined), label: 'New'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.task_alt_outlined), label: 'Completed'),
+              icon: Icon(Icons.account_tree_outlined), label: 'In Progress'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.cancel_outlined), label: 'Canceled'),
+              icon: Icon(Icons.cancel_outlined), label: 'Cancel'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.run_circle_outlined), label: 'Progress'),
+              icon: Icon(Icons.done_all_outlined), label: 'Complete'),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const AddNewTaskScreen(),
+            ),
+          );
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
